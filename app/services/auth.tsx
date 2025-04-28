@@ -1,13 +1,18 @@
 // services/auth.tsx
 "use client"
 
-import { onAuthStateChanged, User } from "firebase/auth"
+import { onAuthStateChanged, User, signOut } from "firebase/auth"
 import { auth } from "@/firebase/clientApp"
 import { useState, useEffect, useContext, createContext } from "react"
 
-const AuthContext = createContext<{ user: User | null; loading: boolean }>({
+const AuthContext = createContext<{
+  user: User | null
+  loading: boolean
+  logout: () => Promise<void>
+}>({
   user: null,
   loading: true,
+  logout: async () => {},
 })
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -23,8 +28,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return () => unsubscribe()
   }, [])
 
+  const logout = async () => {
+    try {
+      await signOut(auth)
+    } catch (error) {
+      console.error("Error signing out:", error)
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider value={{ user, loading, logout }}>
       {children}
     </AuthContext.Provider>
   )
