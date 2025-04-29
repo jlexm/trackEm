@@ -2,8 +2,10 @@
 
 import { useAuth } from "../services/auth"
 import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import NavBar from "../components/NavBar"
+import { db } from "@/firebase/clientApp"
+import { collection, getDocs } from "firebase/firestore"
 import { Bar, Line, Scatter, Pie } from "react-chartjs-2"
 import {
   Chart as ChartJS,
@@ -15,10 +17,9 @@ import {
   Legend,
   PointElement,
   LineElement,
-  ArcElement, // Added ArcElement for Pie chart
+  ArcElement,
 } from "chart.js"
 
-// Register Chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -28,39 +29,14 @@ ChartJS.register(
   Legend,
   PointElement,
   LineElement,
-  ArcElement // Register ArcElement for Pie chart
+  ArcElement
 )
-
-const turtleData = [
-  {
-    id: 1,
-    image: "https://placehold.co/100x100?text=Turtle",
-    dateRescued: "2025-04-25",
-    length: 30,
-    weight: 5,
-    notes: "Released back into the wild.",
-  },
-  {
-    id: 2,
-    image: "https://placehold.co/100x100?text=Turtle2",
-    dateRescued: "2025-04-20",
-    length: 28,
-    weight: 4.5,
-    notes: "Minor shell injury.",
-  },
-  {
-    id: 3,
-    image: "https://placehold.co/100x100?text=Turtle3",
-    dateRescued: "2025-04-18",
-    length: 32,
-    weight: 6,
-    notes: "In recovery.",
-  },
-]
 
 export default function AdminPage() {
   const { user, loading, logout } = useAuth()
   const router = useRouter()
+
+  const [turtleData, setTurtleData] = useState<any[]>([])
 
   useEffect(() => {
     if (!loading && user === null) {
@@ -68,27 +44,39 @@ export default function AdminPage() {
     }
   }, [user, loading, router])
 
+  useEffect(() => {
+    const fetchTurtles = async () => {
+      const turtlesRef = collection(db, "turtles")
+      const querySnapshot = await getDocs(turtlesRef)
+      const turtles: any[] = []
+      querySnapshot.forEach((doc) => {
+        turtles.push({ id: doc.id, ...doc.data() })
+      })
+      setTurtleData(turtles)
+    }
+
+    fetchTurtles()
+  }, [])
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <p className="text-gray-700 dark:text-white">Loading...</p>
+        <p className="text-gray-600">Loading...</p>
       </div>
     )
   }
 
   if (!user) return null
 
-  // Rescue Trends Data: Count how many turtles were rescued each day
   const rescueTrends = turtleData.reduce(
     (acc: Record<string, number>, turtle) => {
-      const date = turtle.dateRescued
+      const date = turtle.dateRescued.toDate().toLocaleDateString()
       acc[date] = acc[date] ? acc[date] + 1 : 1
       return acc
     },
     {}
   )
 
-  // Data for Line chart (Rescue Trends)
   const trendChartData = {
     labels: Object.keys(rescueTrends),
     datasets: [
@@ -102,7 +90,6 @@ export default function AdminPage() {
     ],
   }
 
-  // Data for Scatter chart (Turtle Length vs Weight)
   const scatterChartData = {
     datasets: [
       {
@@ -116,7 +103,6 @@ export default function AdminPage() {
     ],
   }
 
-  // Data for Pie chart (Turtle Count Distribution)
   const turtleCountPieData = {
     labels: Object.keys(rescueTrends),
     datasets: [
@@ -129,115 +115,105 @@ export default function AdminPage() {
           "rgba(255, 159, 64, 0.6)",
           "rgba(75, 192, 192, 0.6)",
           "rgba(153, 102, 255, 0.6)",
-        ], // Different colors for each segment
+        ],
       },
     ],
   }
 
-  // Logout function
   const handleLogout = () => {
-    logout() // Calling the logout function to log the user out
-    router.push("/login") // Redirecting to login page
-  }
-
-  // Action Handlers
-  const handleView = (id: number) => {
-    alert(`Viewing Turtle ${id}`)
-  }
-
-  const handleEdit = (id: number) => {
-    alert(`Editing Turtle ${id}`)
-  }
-
-  const handleDelete = (id: number) => {
-    alert(`Deleting Turtle ${id}`)
+    logout()
+    router.push("/login")
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50">
       <NavBar />
-      <main className="p-6 space-y-8">
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">
+      <main className="p-4 sm:p-8 space-y-10 max-w-screen-xl mx-auto">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+          <h2 className="text-2xl sm:text-3xl font-semibold text-gray-800">
             Hello, {user.email}!
           </h2>
           <button
             onClick={handleLogout}
-            className="bg-[#FF2C2C] text-white px-4 py-2 rounded-full hover:bg-red-700 transition duration-200"
+            className="bg-red-500 text-white py-2 px-4 sm:px-6 rounded-md hover:bg-red-600 transition duration-200 text-sm sm:text-base"
           >
             Logout
           </button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-          <div className="w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-            <h3 className="text-xl sm:text-2xl font-semibold text-gray-800 dark:text-white mb-4">
-              Turtle Rescue Trends Over Time
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="w-full bg-white rounded-lg shadow p-4 sm:p-6">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-4">
+              Turtle Rescue Trends
             </h3>
             <Line data={trendChartData} height={250} />
           </div>
 
-          <div className="w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-            <h3 className="text-xl sm:text-2xl font-semibold text-gray-800 dark:text-white mb-4">
+          <div className="w-full bg-white rounded-lg shadow p-4 sm:p-6">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-4">
               Turtle Length vs Weight
             </h3>
             <Scatter data={scatterChartData} height={250} />
           </div>
 
-          {/* Turtle Count Pie Chart */}
-          <div className="w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-            <h3 className="text-xl sm:text-2xl font-semibold text-gray-800 dark:text-white mb-4">
-              Turtle Rescue Count Distribution
+          <div className="w-full bg-white rounded-lg shadow p-4 sm:p-6">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-4">
+              Rescue Count Distribution
             </h3>
             <Pie data={turtleCountPieData} height={250} />
           </div>
         </div>
 
-        <div className="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg">
-          <table className="min-w-full table-auto text-sm sm:text-base">
-            <thead>
-              <tr className="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 uppercase">
-                <th className="py-3 px-6 text-left">Image</th>
-                <th className="py-3 px-6 text-left">Date Rescued</th>
-                <th className="py-3 px-6 text-left">Length</th>
-                <th className="py-3 px-6 text-left">Weight</th>
-                <th className="py-3 px-6 text-left">Notes</th>
-                <th className="py-3 px-6 text-left">Actions</th>
+        <div className="bg-white shadow-md rounded-lg overflow-x-auto">
+          <table className="min-w-full text-sm sm:text-base">
+            <thead className="bg-gray-200 text-gray-700">
+              <tr>
+                <th className="py-3 px-4 sm:px-6 text-left">Image</th>
+                <th className="py-3 px-4 sm:px-6 text-left">Date Rescued</th>
+                <th className="py-3 px-4 sm:px-6 text-left">Length</th>
+                <th className="py-3 px-4 sm:px-6 text-left">Weight</th>
+                <th className="py-3 px-4 sm:px-6 text-left">Notes</th>
+                <th className="py-3 px-4 sm:px-6 text-left">Actions</th>
               </tr>
             </thead>
-            <tbody className="text-gray-700 dark:text-gray-300 font-light">
+            <tbody className="text-gray-600">
               {turtleData.map((turtle) => (
                 <tr
                   key={turtle.id}
-                  className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300"
+                  className="border-b border-gray-200 hover:bg-gray-50 transition duration-300"
                 >
-                  <td className="py-3 px-6">
+                  <td className="py-3 px-4 sm:px-6">
                     <img
-                      src={turtle.image}
+                      src={
+                        turtle.imageUrl ||
+                        "https://placehold.co/100x100?text=Turtle"
+                      }
                       alt="Turtle"
-                      className="w-16 h-16 sm:w-20 sm:h-20 rounded-md object-cover"
+                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover"
                     />
                   </td>
-                  <td className="py-3 px-6">{turtle.dateRescued}</td>
-                  <td className="py-3 px-6">{turtle.length} cm</td>
-                  <td className="py-3 px-6">{turtle.weight} kg</td>
-                  <td className="py-3 px-6">{turtle.notes}</td>
-                  <td className="py-3 px-6">
+                  <td className="py-3 px-4 sm:px-6">
+                    {turtle.dateRescued.toDate().toLocaleDateString()}
+                  </td>
+                  <td className="py-3 px-4 sm:px-6">{turtle.length} cm</td>
+                  <td className="py-3 px-4 sm:px-6">{turtle.weight} kg</td>
+                  <td className="py-3 px-4 sm:px-6">{turtle.notes}</td>
+                  <td className="py-3 px-4 sm:px-6 whitespace-nowrap">
                     <button
-                      onClick={() => handleView(turtle.id)}
-                      className="text-blue-500 hover:text-blue-700 mr-4"
+                      onClick={() => alert(`Viewing Turtle ${turtle.id}`)}
+                      className="text-blue-500 hover:text-blue-700 text-sm"
                     >
                       View
                     </button>
                     <button
-                      onClick={() => handleEdit(turtle.id)}
-                      className="text-yellow-500 hover:text-yellow-700 mr-4"
+                      onClick={() => alert(`Editing Turtle ${turtle.id}`)}
+                      className="text-yellow-500 hover:text-yellow-700 ml-2 text-sm"
                     >
                       Edit
                     </button>
                     <button
-                      onClick={() => handleDelete(turtle.id)}
-                      className="text-red-500 hover:text-red-700"
+                      onClick={() => alert(`Deleting Turtle ${turtle.id}`)}
+                      className="text-red-500 hover:text-red-700 ml-2 text-sm"
                     >
                       Delete
                     </button>

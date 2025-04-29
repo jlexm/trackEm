@@ -1,5 +1,7 @@
 import { initializeApp, getApps, getApp } from "firebase/app"
 import { getAuth } from "firebase/auth"
+import { getFirestore } from "firebase/firestore"
+import { getStorage } from "firebase/storage"
 import { getAnalytics, isSupported } from "firebase/analytics"
 
 // Your Firebase configuration
@@ -16,10 +18,12 @@ const firebaseConfig = {
 // Initialize Firebase app (only once)
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp()
 
-// Export services you need
+// Export services
 export const auth = getAuth(app)
+export const db = getFirestore(app)
+export const storage = getStorage(app)
 
-// Optional: Only get Analytics if supported (analytics doesn't work on server side)
+// Optional: Only get Analytics if supported
 let analytics: ReturnType<typeof getAnalytics> | null = null
 if (typeof window !== "undefined") {
   isSupported().then((yes) => {

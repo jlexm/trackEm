@@ -10,15 +10,19 @@ export default function LoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
 
   const login = async (e: React.FormEvent) => {
     e.preventDefault()
+    setIsLoading(true)
     try {
       await signInWithEmailAndPassword(auth, email, password)
-      router.push("/admin") // Redirect after login
+      router.push("/admin")
     } catch (error: any) {
       console.error(error.message)
       alert("Login failed: " + error.message)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -63,8 +67,9 @@ export default function LoginPage() {
           <button
             type="submit"
             className="w-full bg-[#121821] hover:bg-[#324158] text-white font-semibold py-2 px-4 rounded-lg transition duration-300"
+            disabled={isLoading}
           >
-            Login
+            {isLoading ? <span>Loading...</span> : "Login"}
           </button>
         </form>
       </div>

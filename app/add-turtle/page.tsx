@@ -2,6 +2,9 @@
 
 import React, { useState } from "react"
 import NavBar from "../components/NavBar"
+import { storage, db } from "@/firebase/clientApp"
+import { addDoc, collection, Timestamp } from "firebase/firestore"
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
 
 export default function AddTurtle() {
   const [formData, setFormData] = useState({
@@ -11,6 +14,8 @@ export default function AddTurtle() {
     weight: "",
     notes: "",
   })
+
+  const [isLoading, setIsLoading] = useState(false) // Loading state
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -25,9 +30,44 @@ export default function AddTurtle() {
     }
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Submitted Data:", formData)
+    setIsLoading(true) // Set loading to true when submitting
+
+    try {
+      let imageUrl = ""
+      if (formData.image) {
+        const imageRef = ref(
+          storage,
+          `turtle-images/${formData.image.name}-${Date.now()}`
+        )
+        await uploadBytes(imageRef, formData.image)
+        imageUrl = await getDownloadURL(imageRef)
+      }
+
+      await addDoc(collection(db, "turtles"), {
+        imageUrl,
+        dateRescued: Timestamp.fromDate(new Date(formData.dateRescued)),
+        length: parseFloat(formData.length),
+        weight: parseFloat(formData.weight),
+        notes: formData.notes,
+        createdAt: Timestamp.now(),
+      })
+
+      alert("Turtle saved successfully!")
+      setFormData({
+        image: null,
+        dateRescued: "",
+        length: "",
+        weight: "",
+        notes: "",
+      })
+    } catch (err) {
+      console.error("Error saving turtle:", err)
+      alert("Failed to save turtle")
+    } finally {
+      setIsLoading(false) // Set loading to false when finished
+    }
   }
 
   return (
@@ -109,7 +149,7 @@ export default function AddTurtle() {
               name="notes"
               value={formData.notes}
               onChange={handleChange}
-              className="block w-full text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-700 rounded-md p-2"
+              className="block w-full text-gray-900 dark:text-gray    -100 bg-gray-50 dark:bg-gray-700 rounded-md p-2"
               rows={4}
               placeholder="Add any important notes..."
             />
@@ -119,8 +159,9 @@ export default function AddTurtle() {
           <button
             type="submit"
             className="w-full bg-[#121821] hover:bg-[#324158] text-white font-semibold py-2 px-4 rounded-lg transition"
+            disabled={isLoading}
           >
-            Save Turtle
+            {isLoading ? <span>Saving...</span> : "Save Turtle"}
           </button>
         </form>
       </div>
