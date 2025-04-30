@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import NavBar from "../components/NavBar"
 import { db } from "@/firebase/clientApp"
-import { collection, getDocs } from "firebase/firestore"
+import { collection, getDocs, deleteDoc, doc } from "firebase/firestore"
 import { Bar, Line, Scatter, Pie } from "react-chartjs-2"
 import {
   Chart as ChartJS,
@@ -125,6 +125,21 @@ export default function AdminPage() {
     router.push("/login")
   }
 
+  const handleDelete = async (id: string) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this turtle?"
+    )
+    if (!confirmDelete) return
+
+    try {
+      await deleteDoc(doc(db, "turtles", id))
+      setTurtleData((prev) => prev.filter((turtle) => turtle.id !== id))
+    } catch (error) {
+      console.error("Error deleting turtle:", error)
+      alert("Failed to delete turtle. Please try again.")
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <NavBar />
@@ -172,6 +187,7 @@ export default function AdminPage() {
                 <th className="py-3 px-4 sm:px-6 text-left">Date Rescued</th>
                 <th className="py-3 px-4 sm:px-6 text-left">Length</th>
                 <th className="py-3 px-4 sm:px-6 text-left">Weight</th>
+                <th className="py-3 px-4 sm:px-6 text-left">Location</th>
                 <th className="py-3 px-4 sm:px-6 text-left">Notes</th>
                 <th className="py-3 px-4 sm:px-6 text-left">Actions</th>
               </tr>
@@ -197,22 +213,27 @@ export default function AdminPage() {
                   </td>
                   <td className="py-3 px-4 sm:px-6">{turtle.length} cm</td>
                   <td className="py-3 px-4 sm:px-6">{turtle.weight} kg</td>
+                  <td className="py-3 px-4 sm:px-6">
+                    {turtle.location || "—"}
+                  </td>
                   <td className="py-3 px-4 sm:px-6">{turtle.notes}</td>
                   <td className="py-3 px-4 sm:px-6 whitespace-nowrap">
                     <button
-                      onClick={() => alert(`Viewing Turtle ${turtle.id}`)}
+                      onClick={() => router.push(`/admin/turtle/${turtle.id}`)}
                       className="text-blue-500 hover:text-blue-700 text-sm"
                     >
                       View
                     </button>
                     <button
-                      onClick={() => alert(`Editing Turtle ${turtle.id}`)}
+                      onClick={() =>
+                        router.push(`/admin/edit/turtle/${turtle.id}`)
+                      }
                       className="text-yellow-500 hover:text-yellow-700 ml-2 text-sm"
                     >
                       Edit
                     </button>
                     <button
-                      onClick={() => alert(`Deleting Turtle ${turtle.id}`)}
+                      onClick={() => handleDelete(turtle.id)}
                       className="text-red-500 hover:text-red-700 ml-2 text-sm"
                     >
                       Delete

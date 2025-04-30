@@ -2,19 +2,19 @@
 
 import { useState, useEffect } from "react"
 import { Html5QrcodeScanner } from "html5-qrcode"
-import Link from "next/link"
+import { useRouter } from "next/navigation"
 import NavBar from "./components/NavBar"
+import Link from "next/link"
 
 export default function ScanQR() {
-  const [scannedData, setScannedData] = useState<string | null>(null)
   const [scanner, setScanner] = useState<Html5QrcodeScanner | null>(null)
+  const router = useRouter()
 
   useEffect(() => {
     const qrRegionId = "qr-reader"
     const existingScannerElement = document.getElementById(qrRegionId)
 
     if (scanner) {
-      // If a previous scanner exists, clear it
       scanner.clear().catch((error) => console.error("Clear error:", error))
     }
 
@@ -27,8 +27,10 @@ export default function ScanQR() {
     newScanner.render(
       (result) => {
         console.log("Scanned QR Code:", result)
-        setScannedData(result)
-        newScanner.clear() // Clear the scanner after a successful scan
+        newScanner.clear() // Stop scanner after successful scan
+
+        // Redirect to turtle view page with scanned ID
+        router.push(`/admin/turtle/${result}`)
       },
       (error) => {
         console.warn("QR Scan Error:", error)
@@ -37,15 +39,17 @@ export default function ScanQR() {
 
     setScanner(newScanner)
 
-    // Cleanup scanner when the component is unmounted
     return () => {
       if (existingScannerElement) {
-        // Ensure that we don't try to remove a non-existent child node
         existingScannerElement.innerHTML = ""
       }
       newScanner.clear().catch((error) => console.error("Clear error:", error))
     }
-  }, []) // Run once when component mounts
+  }, [])
+
+  const handleAddTurtle = () => {
+    router.push("/admin/add-turtle") // Redirect to the "add turtle" page
+  }
 
   return (
     <div>
@@ -58,17 +62,6 @@ export default function ScanQR() {
         <div className="w-full max-w-lg bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg flex justify-center items-center mb-6">
           <div id="qr-reader" className="w-full" />
         </div>
-
-        {scannedData && (
-          <div className="w-full max-w-md text-center bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-            <p className="text-gray-700 dark:text-gray-300 mb-2">
-              Scanned Data:
-            </p>
-            <p className="font-mono break-words text-sm text-gray-900 dark:text-white">
-              {scannedData}
-            </p>
-          </div>
-        )}
 
         <div className="w-full flex justify-center mt-6">
           <Link

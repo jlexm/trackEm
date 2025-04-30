@@ -1,21 +1,24 @@
 "use client"
 
 import React, { useState } from "react"
+import { useRouter } from "next/navigation"
 import NavBar from "../components/NavBar"
 import { storage, db } from "@/firebase/clientApp"
 import { addDoc, collection, Timestamp } from "firebase/firestore"
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
 
 export default function AddTurtle() {
+  const router = useRouter()
   const [formData, setFormData] = useState({
     image: null as File | null,
     dateRescued: "",
     length: "",
     weight: "",
     notes: "",
+    location: "", // ✅ Added location
   })
 
-  const [isLoading, setIsLoading] = useState(false) // Loading state
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -32,7 +35,7 @@ export default function AddTurtle() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsLoading(true) // Set loading to true when submitting
+    setIsLoading(true)
 
     try {
       let imageUrl = ""
@@ -45,28 +48,34 @@ export default function AddTurtle() {
         imageUrl = await getDownloadURL(imageRef)
       }
 
-      await addDoc(collection(db, "turtles"), {
+      const docRef = await addDoc(collection(db, "turtles"), {
         imageUrl,
         dateRescued: Timestamp.fromDate(new Date(formData.dateRescued)),
         length: parseFloat(formData.length),
         weight: parseFloat(formData.weight),
         notes: formData.notes,
+        location: formData.location, // ✅ Include location
         createdAt: Timestamp.now(),
       })
 
       alert("Turtle saved successfully!")
+
+      // Redirect to the newly created turtle's page
+      router.push(`/admin/turtle/${docRef.id}`)
+
       setFormData({
         image: null,
         dateRescued: "",
         length: "",
         weight: "",
         notes: "",
+        location: "", // ✅ Reset location
       })
     } catch (err) {
       console.error("Error saving turtle:", err)
       alert("Failed to save turtle")
     } finally {
-      setIsLoading(false) // Set loading to false when finished
+      setIsLoading(false)
     }
   }
 
@@ -140,6 +149,22 @@ export default function AddTurtle() {
             />
           </div>
 
+          {/* Location */}
+          <div>
+            <label className="block text-gray-700 dark:text-gray-300 mb-2">
+              Rescue Location
+            </label>
+            <input
+              type="text"
+              name="location"
+              value={formData.location}
+              onChange={handleChange}
+              className="block w-full text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-700 rounded-md p-2"
+              placeholder="Enter location of rescue"
+              required
+            />
+          </div>
+
           {/* Notes */}
           <div>
             <label className="block text-gray-700 dark:text-gray-300 mb-2">
@@ -149,7 +174,7 @@ export default function AddTurtle() {
               name="notes"
               value={formData.notes}
               onChange={handleChange}
-              className="block w-full text-gray-900 dark:text-gray    -100 bg-gray-50 dark:bg-gray-700 rounded-md p-2"
+              className="block w-full text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-700 rounded-md p-2"
               rows={4}
               placeholder="Add any important notes..."
             />
