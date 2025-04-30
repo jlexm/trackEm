@@ -47,10 +47,6 @@ export default function ScanQR() {
     }
   }, [])
 
-  const handleAddTurtle = () => {
-    router.push("/admin/add-turtle") // Redirect to the "add turtle" page
-  }
-
   return (
     <div>
       <NavBar />
