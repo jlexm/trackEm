@@ -7,7 +7,6 @@ import { db } from "@/firebase/clientApp"
 import NavBar from "@/app/components/NavBar"
 import { QRCodeSVG } from "qrcode.react"
 import { Calendar, Ruler, Weight, StickyNote } from "lucide-react"
-import TurtleHistoryPage from "../../history/turtle/[id]/page"
 
 export default function ViewTurtle() {
   const { id } = useParams()
@@ -35,8 +34,8 @@ export default function ViewTurtle() {
     <div className="min-h-screen bg-gray-50">
       <NavBar />
       <div className="flex flex-col lg:flex-row space-y-8 lg:space-y-0 lg:space-x-8 mt-8 px-4 py-6 max-w-7xl mx-auto">
-        {/* Left Column - Turtle Details */}
-        <div className="w-full lg:w-2/3 bg-white rounded-2xl shadow-lg overflow-hidden">
+        {/* Turtle Details */}
+        <div className="w-full bg-white rounded-2xl shadow-lg overflow-hidden">
           <div className="w-full h-64 bg-gray-100 flex items-center justify-center overflow-hidden">
             <img
               src={turtle.imageUrl}
@@ -81,20 +80,21 @@ export default function ViewTurtle() {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex justify-center mt-6">
+            <div className="flex flex-col lg:flex-row justify-center gap-4 mt-6">
               <button
                 onClick={() => router.push(`/admin/edit/turtle/${id}`)}
-                className="w-full lg:w-auto px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
               >
                 Update Turtle
               </button>
+              <button
+                onClick={() => router.push(`/admin/history/turtle/${id}`)}
+                className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition"
+              >
+                View History
+              </button>
             </div>
           </div>
-        </div>
-
-        {/* Right Column - Turtle History */}
-        <div className="w-full lg:w-1/3 bg-white rounded-2xl shadow-lg p-6 overflow-y-auto max-h-[900px]">
-          {id && <TurtleHistoryPage id={id as string} />}
         </div>
       </div>
     </div>
