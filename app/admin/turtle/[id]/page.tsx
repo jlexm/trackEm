@@ -1,14 +1,17 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useParams } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 import { doc, getDoc } from "firebase/firestore"
 import { db } from "@/firebase/clientApp"
 import NavBar from "@/app/components/NavBar"
 import { QRCodeSVG } from "qrcode.react"
+import { Calendar, Ruler, Weight, StickyNote } from "lucide-react"
+import TurtleHistoryPage from "../../history/turtle/[id]/page"
 
 export default function ViewTurtle() {
   const { id } = useParams()
+  const router = useRouter()
   const [turtle, setTurtle] = useState<any>(null)
 
   useEffect(() => {
@@ -31,8 +34,9 @@ export default function ViewTurtle() {
   return (
     <div className="min-h-screen bg-gray-50">
       <NavBar />
-      <main className="max-w-md w-full mx-auto px-4 py-8">
-        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+      <div className="flex flex-col lg:flex-row space-y-8 lg:space-y-0 lg:space-x-8 mt-8 px-4 py-6 max-w-7xl mx-auto">
+        {/* Left Column - Turtle Details */}
+        <div className="w-full lg:w-2/3 bg-white rounded-2xl shadow-lg overflow-hidden">
           <div className="w-full h-64 bg-gray-100 flex items-center justify-center overflow-hidden">
             <img
               src={turtle.imageUrl}
@@ -42,19 +46,31 @@ export default function ViewTurtle() {
           </div>
 
           <div className="p-6 space-y-5">
-            <h1 className="text-2xl font-semibold text-gray-800 text-center">
+            <h1 className="text-3xl font-semibold text-gray-800 text-center mb-4">
               Turtle Details
             </h1>
 
             <Detail label="Date Rescued">
+              <Calendar size={16} className="inline-block mr-2" />
               {turtle.dateRescued.toDate().toLocaleDateString()}
             </Detail>
-            <Detail label="Length">{turtle.length} cm</Detail>
-            <Detail label="Weight">{turtle.weight} kg</Detail>
+
+            <Detail label="Length">
+              <Ruler size={16} className="inline-block mr-2" />
+              {turtle.length} cm
+            </Detail>
+
+            <Detail label="Weight">
+              <Weight size={16} className="inline-block mr-2" />
+              {turtle.weight} kg
+            </Detail>
+
             <Detail label="Notes">
+              <StickyNote size={16} className="inline-block mr-2" />
               {turtle.notes || "No notes provided."}
             </Detail>
 
+            {/* QR Code */}
             <div className="text-center pt-4 border-t border-gray-200">
               <div className="inline-block bg-white p-3 rounded-lg shadow-md hover:shadow-lg transition">
                 <QRCodeSVG value={id as string} size={128} />
@@ -63,9 +79,24 @@ export default function ViewTurtle() {
                 ID: {id}
               </p>
             </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-center mt-6">
+              <button
+                onClick={() => router.push(`/admin/edit/turtle/${id}`)}
+                className="w-full lg:w-auto px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+              >
+                Update Turtle
+              </button>
+            </div>
           </div>
         </div>
-      </main>
+
+        {/* Right Column - Turtle History */}
+        <div className="w-full lg:w-1/3 bg-white rounded-2xl shadow-lg p-6 overflow-y-auto max-h-[900px]">
+          {id && <TurtleHistoryPage id={id as string} />}
+        </div>
+      </div>
     </div>
   )
 }

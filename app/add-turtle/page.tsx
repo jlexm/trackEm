@@ -6,6 +6,14 @@ import NavBar from "../components/NavBar"
 import { storage, db } from "@/firebase/clientApp"
 import { addDoc, collection, Timestamp } from "firebase/firestore"
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
+import {
+  Calendar,
+  Ruler,
+  Weight,
+  MapPin,
+  StickyNote,
+  Image as ImageIcon,
+} from "lucide-react"
 
 export default function AddTurtle() {
   const router = useRouter()
@@ -15,7 +23,7 @@ export default function AddTurtle() {
     length: "",
     weight: "",
     notes: "",
-    location: "", // ✅ Added location
+    location: "",
   })
 
   const [isLoading, setIsLoading] = useState(false)
@@ -54,13 +62,11 @@ export default function AddTurtle() {
         length: parseFloat(formData.length),
         weight: parseFloat(formData.weight),
         notes: formData.notes,
-        location: formData.location, // ✅ Include location
+        location: formData.location,
         createdAt: Timestamp.now(),
       })
 
       alert("Turtle saved successfully!")
-
-      // Redirect to the newly created turtle's page
       router.push(`/admin/turtle/${docRef.id}`)
 
       setFormData({
@@ -69,7 +75,7 @@ export default function AddTurtle() {
         length: "",
         weight: "",
         notes: "",
-        location: "", // ✅ Reset location
+        location: "",
       })
     } catch (err) {
       console.error("Error saving turtle:", err)
@@ -92,8 +98,8 @@ export default function AddTurtle() {
           </h1>
 
           <div>
-            <label className="block text-gray-700 dark:text-gray-300 mb-2">
-              Turtle Image
+            <label className="flex items-center gap-2 text-gray-700 dark:text-gray-300 mb-2">
+              <ImageIcon size={16} /> Turtle Image
             </label>
             <input
               type="file"
@@ -104,8 +110,8 @@ export default function AddTurtle() {
           </div>
 
           <div>
-            <label className="block text-gray-700 dark:text-gray-300 mb-2">
-              Date Rescued
+            <label className="flex items-center gap-2 text-gray-700 dark:text-gray-300 mb-2">
+              <Calendar size={16} /> Date Rescued
             </label>
             <input
               type="date"
@@ -117,10 +123,9 @@ export default function AddTurtle() {
             />
           </div>
 
-          {/* Length */}
           <div>
-            <label className="block text-gray-700 dark:text-gray-300 mb-2">
-              Length (cm)
+            <label className="flex items-center gap-2 text-gray-700 dark:text-gray-300 mb-2">
+              <Ruler size={16} /> Length (cm)
             </label>
             <input
               type="number"
@@ -133,10 +138,9 @@ export default function AddTurtle() {
             />
           </div>
 
-          {/* Weight */}
           <div>
-            <label className="block text-gray-700 dark:text-gray-300 mb-2">
-              Weight (kg)
+            <label className="flex items-center gap-2 text-gray-700 dark:text-gray-300 mb-2">
+              <Weight size={16} /> Weight (kg)
             </label>
             <input
               type="number"
@@ -149,10 +153,9 @@ export default function AddTurtle() {
             />
           </div>
 
-          {/* Location */}
           <div>
-            <label className="block text-gray-700 dark:text-gray-300 mb-2">
-              Rescue Location
+            <label className="flex items-center gap-2 text-gray-700 dark:text-gray-300 mb-2">
+              <MapPin size={16} /> Rescue Location
             </label>
             <input
               type="text"
@@ -165,10 +168,9 @@ export default function AddTurtle() {
             />
           </div>
 
-          {/* Notes */}
           <div>
-            <label className="block text-gray-700 dark:text-gray-300 mb-2">
-              Notes
+            <label className="flex items-center gap-2 text-gray-700 dark:text-gray-300 mb-2">
+              <StickyNote size={16} /> Notes
             </label>
             <textarea
               name="notes"
@@ -180,7 +182,6 @@ export default function AddTurtle() {
             />
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             className="w-full bg-[#121821] hover:bg-[#324158] text-white font-semibold py-2 px-4 rounded-lg transition"

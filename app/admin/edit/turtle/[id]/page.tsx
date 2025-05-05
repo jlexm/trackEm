@@ -119,7 +119,7 @@ export default function EditTurtlePage() {
       <NavBar />
       <div className="bg-white p-6 sm:p-8 max-w-xl mx-auto rounded-lg shadow-lg mt-6">
         <h1 className="text-3xl font-semibold text-center mb-6 text-gray-800">
-          Edit Turtle
+          Update Turtle
         </h1>
         <p className="text-sm text-gray-600 text-center mb-4">ID: {id}</p>
 
@@ -196,13 +196,6 @@ export default function EditTurtlePage() {
               className="w-full sm:w-auto bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               Save Changes
-            </button>
-            <button
-              type="button"
-              onClick={() => router.push(`/admin/history/turtle/${id}`)}
-              className="w-full sm:w-auto bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
-            >
-              View History
             </button>
           </div>
         </form>

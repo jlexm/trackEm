@@ -19,6 +19,7 @@ import {
   LineElement,
   ArcElement,
 } from "chart.js"
+import { Eye, Trash2 } from "lucide-react"
 
 ChartJS.register(
   CategoryScale,
@@ -217,26 +218,20 @@ export default function AdminPage() {
                     {turtle.location || "—"}
                   </td>
                   <td className="py-3 px-4 sm:px-6">{turtle.notes}</td>
-                  <td className="py-3 px-4 sm:px-6 whitespace-nowrap">
+                  <td className="py-3 px-4 sm:px-6 whitespace-nowrap flex gap-2">
                     <button
                       onClick={() => router.push(`/admin/turtle/${turtle.id}`)}
-                      className="text-blue-500 hover:text-blue-700 text-sm"
+                      className="text-blue-500 hover:text-blue-700"
+                      title="View"
                     >
-                      View
-                    </button>
-                    <button
-                      onClick={() =>
-                        router.push(`/admin/edit/turtle/${turtle.id}`)
-                      }
-                      className="text-yellow-500 hover:text-yellow-700 ml-2 text-sm"
-                    >
-                      Edit
+                      <Eye size={18} />
                     </button>
                     <button
                       onClick={() => handleDelete(turtle.id)}
-                      className="text-red-500 hover:text-red-700 ml-2 text-sm"
+                      className="text-red-500 hover:text-red-700"
+                      title="Delete"
                     >
-                      Delete
+                      <Trash2 size={18} />
                     </button>
                   </td>
                 </tr>
