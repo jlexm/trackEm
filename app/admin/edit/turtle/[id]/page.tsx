@@ -118,38 +118,38 @@ export default function EditTurtlePage() {
     <div>
       <NavBar />
       <div className="bg-white p-6 sm:p-8 max-w-xl mx-auto rounded-lg shadow-lg mt-6">
-        <h1 className="text-3xl font-semibold text-center mb-6 text-gray-800">
+        <h1 className="text-3xl font-semibold text-center mb-6 text-[#064e3b]">
           Update Turtle
         </h1>
-        <p className="text-sm text-gray-600 text-center mb-4">ID: {id}</p>
+        <p className="text-sm text-[#6b7280] text-center mb-4">ID: {id}</p>
 
         <form className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-[#064e3b]">
               Notes
             </label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#059669]"
               rows={4}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-[#064e3b]">
               Location
             </label>
             <input
               type="text"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#059669]"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-[#064e3b]">
               Length (cm)
             </label>
             <input
@@ -158,12 +158,12 @@ export default function EditTurtlePage() {
               onChange={(e) =>
                 setLength(e.target.value ? parseFloat(e.target.value) : "")
               }
-              className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#059669]"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-[#064e3b]">
               Weight (kg)
             </label>
             <input
@@ -172,12 +172,12 @@ export default function EditTurtlePage() {
               onChange={(e) =>
                 setWeight(e.target.value ? parseFloat(e.target.value) : "")
               }
-              className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#059669]"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-[#064e3b]">
               Upload New Image (Optional)
             </label>
             <input
@@ -185,7 +185,7 @@ export default function EditTurtlePage() {
               onChange={(e) =>
                 setImage(e.target.files ? e.target.files[0] : null)
               }
-              className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#059669]"
             />
           </div>
 
@@ -193,7 +193,7 @@ export default function EditTurtlePage() {
             <button
               type="button"
               onClick={handleSave}
-              className="w-full sm:w-auto bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full sm:w-auto bg-[#059669] text-white px-6 py-3 rounded-lg hover:bg-[#047857] focus:outline-none focus:ring-2 focus:ring-[#059669]"
             >
               Save Changes
             </button>

@@ -45,27 +45,33 @@ export default function ViewTurtle() {
           </div>
 
           <div className="p-6 space-y-5">
-            <h1 className="text-3xl font-semibold text-gray-800 text-center mb-4">
+            <h1 className="text-3xl font-semibold text-[#064e3b] text-center mb-4">
               Turtle Details
             </h1>
 
             <Detail label="Date Rescued">
-              <Calendar size={16} className="inline-block mr-2" />
+              <Calendar
+                size={16}
+                className="inline-block mr-2 text-[#6b7280]"
+              />
               {turtle.dateRescued.toDate().toLocaleDateString()}
             </Detail>
 
             <Detail label="Length">
-              <Ruler size={16} className="inline-block mr-2" />
+              <Ruler size={16} className="inline-block mr-2 text-[#6b7280]" />
               {turtle.length} cm
             </Detail>
 
             <Detail label="Weight">
-              <Weight size={16} className="inline-block mr-2" />
+              <Weight size={16} className="inline-block mr-2 text-[#6b7280]" />
               {turtle.weight} kg
             </Detail>
 
             <Detail label="Notes">
-              <StickyNote size={16} className="inline-block mr-2" />
+              <StickyNote
+                size={16}
+                className="inline-block mr-2 text-[#6b7280]"
+              />
               {turtle.notes || "No notes provided."}
             </Detail>
 
@@ -74,7 +80,7 @@ export default function ViewTurtle() {
               <div className="inline-block bg-white p-3 rounded-lg shadow-md hover:shadow-lg transition">
                 <QRCodeSVG value={id as string} size={128} />
               </div>
-              <p className="text-lg font-semibold text-gray-700 mt-4">
+              <p className="text-lg font-semibold text-[#6b7280] mt-4">
                 ID: {id}
               </p>
             </div>
@@ -83,7 +89,7 @@ export default function ViewTurtle() {
             <div className="flex flex-col lg:flex-row justify-center gap-4 mt-6">
               <button
                 onClick={() => router.push(`/admin/edit/turtle/${id}`)}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                className="px-6 py-2 bg-[#059669] text-white rounded-lg hover:bg-[#047857] transition"
               >
                 Update Turtle
               </button>
@@ -110,10 +116,10 @@ function Detail({
 }) {
   return (
     <div className="text-sm">
-      <span className="block text-xs text-gray-400 font-medium mb-1">
+      <span className="block text-xs text-[#6b7280] font-medium mb-1">
         {label}
       </span>
-      <p className="text-gray-700 font-medium">{children}</p>
+      <p className="text-[#064e3b] font-medium">{children}</p>
     </div>
   )
 }

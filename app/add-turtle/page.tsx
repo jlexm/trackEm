@@ -88,12 +88,12 @@ export default function AddTurtle() {
   return (
     <div>
       <NavBar />
-      <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center p-6">
+      <div className="min-h-screen bg-gradient-to-br from-white via-green-50 to-green-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-6">
         <form
           onSubmit={handleSubmit}
-          className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md w-full max-w-lg space-y-6"
+          className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md w-full max-w-lg space-y-6 border border-green-100 dark:border-gray-700"
         >
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white text-center">
+          <h1 className="text-2xl font-bold text-center bg-gradient-to-r from-emerald-700 via-green-600 to-lime-500 bg-clip-text text-transparent">
             Add New Turtle
           </h1>
 
@@ -105,7 +105,7 @@ export default function AddTurtle() {
               type="file"
               accept="image/*"
               onChange={handleImageChange}
-              className="block w-full text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-700 rounded-md p-2"
+              className="block w-full bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md p-2"
             />
           </div>
 
@@ -118,7 +118,7 @@ export default function AddTurtle() {
               name="dateRescued"
               value={formData.dateRescued}
               onChange={handleChange}
-              className="block w-full text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-700 rounded-md p-2"
+              className="block w-full bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md p-2"
               required
             />
           </div>
@@ -132,7 +132,7 @@ export default function AddTurtle() {
               name="length"
               value={formData.length}
               onChange={handleChange}
-              className="block w-full text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-700 rounded-md p-2"
+              className="block w-full bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md p-2"
               placeholder="Enter length in centimeters"
               required
             />
@@ -147,7 +147,7 @@ export default function AddTurtle() {
               name="weight"
               value={formData.weight}
               onChange={handleChange}
-              className="block w-full text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-700 rounded-md p-2"
+              className="block w-full bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md p-2"
               placeholder="Enter weight in kilograms"
               required
             />
@@ -162,7 +162,7 @@ export default function AddTurtle() {
               name="location"
               value={formData.location}
               onChange={handleChange}
-              className="block w-full text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-700 rounded-md p-2"
+              className="block w-full bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md p-2"
               placeholder="Enter location of rescue"
               required
             />
@@ -176,7 +176,7 @@ export default function AddTurtle() {
               name="notes"
               value={formData.notes}
               onChange={handleChange}
-              className="block w-full text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-700 rounded-md p-2"
+              className="block w-full bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md p-2"
               rows={4}
               placeholder="Add any important notes..."
             />
@@ -184,10 +184,10 @@ export default function AddTurtle() {
 
           <button
             type="submit"
-            className="w-full bg-[#121821] hover:bg-[#324158] text-white font-semibold py-2 px-4 rounded-lg transition"
+            className="w-full bg-gradient-to-r from-green-600 to-emerald-500 hover:opacity-90 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300"
             disabled={isLoading}
           >
-            {isLoading ? <span>Saving...</span> : "Save Turtle"}
+            {isLoading ? "Saving..." : "Save Turtle"}
           </button>
         </form>
       </div>

@@ -34,7 +34,7 @@ export default function TurtleHistoryPage() {
     <div>
       <NavBar />
       <div className="bg-white p-4 sm:p-6 md:p-8 max-w-3xl mx-auto mt-6">
-        <h1 className="text-2xl sm:text-3xl font-semibold text-center mb-6 text-gray-800">
+        <h1 className="text-2xl sm:text-3xl font-semibold text-center mb-6 text-[#064e3b]">
           Turtle Update History
         </h1>
 
@@ -45,15 +45,15 @@ export default function TurtleHistoryPage() {
               <div
                 key={index}
                 className={`bg-gray-50 p-4 rounded-lg shadow-md mb-4 relative ${
-                  isLatestChange ? "border-4 border-blue-500" : ""
+                  isLatestChange ? "border-4 border-[#059669]" : ""
                 }`}
               >
                 {isLatestChange && (
-                  <span className="text-xs text-blue-500 font-semibold uppercase absolute top-4 right-4 bg-white px-2 py-1 rounded-md">
+                  <span className="text-xs text-[#059669] font-semibold uppercase absolute top-4 right-4 bg-white px-2 py-1 rounded-md">
                     Latest Change
                   </span>
                 )}
-                <p className="text-xs sm:text-sm font-medium text-gray-500 mb-2">
+                <p className="text-xs sm:text-sm font-medium text-[#6b7280] mb-2">
                   {new Date(entry.date).toLocaleString()}
                 </p>
                 <ul className="space-y-2 text-sm text-gray-700">
@@ -65,8 +65,10 @@ export default function TurtleHistoryPage() {
                         : entry.changes[key]
                     return (
                       <li key={key} className="flex items-center gap-2">
-                        <Icon size={16} className="text-gray-500" />
-                        <span className="font-medium capitalize">{key}:</span>
+                        <Icon size={16} className="text-[#6b7280]" />
+                        <span className="font-medium capitalize text-[#064e3b]">
+                          {key}:
+                        </span>
                         <span>{value}</span>
                       </li>
                     )
@@ -76,7 +78,7 @@ export default function TurtleHistoryPage() {
             )
           })
         ) : (
-          <p className="text-center text-sm text-gray-500">
+          <p className="text-center text-sm text-[#6b7280]">
             No history available for this turtle.
           </p>
         )}

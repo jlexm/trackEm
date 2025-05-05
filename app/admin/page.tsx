@@ -61,8 +61,8 @@ export default function AdminPage() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <p className="text-gray-600">Loading...</p>
+      <div className="flex justify-center items-center min-h-screen bg-[#f0fdf4]">
+        <p className="text-[#6b7280]">Loading...</p>
       </div>
     )
   }
@@ -85,7 +85,7 @@ export default function AdminPage() {
         label: "Turtles Rescued Over Time",
         data: Object.values(rescueTrends),
         fill: false,
-        borderColor: "rgba(75, 192, 192, 1)",
+        borderColor: "#059669", // Emerald primary color
         tension: 0.1,
       },
     ],
@@ -99,7 +99,7 @@ export default function AdminPage() {
           x: turtle.length,
           y: turtle.weight,
         })),
-        backgroundColor: "rgba(75, 192, 192, 0.6)",
+        backgroundColor: "#10b981", // Light emerald color
       },
     ],
   }
@@ -111,11 +111,11 @@ export default function AdminPage() {
         label: "Turtle Count Distribution",
         data: Object.values(rescueTrends),
         backgroundColor: [
-          "rgba(255, 99, 132, 0.6)",
-          "rgba(54, 162, 235, 0.6)",
-          "rgba(255, 159, 64, 0.6)",
-          "rgba(75, 192, 192, 0.6)",
-          "rgba(153, 102, 255, 0.6)",
+          "#10b981",
+          "#059669",
+          "#6b7280",
+          "#34d399",
+          "#34a853", // Matching landing page colors
         ],
       },
     ],
@@ -142,16 +142,16 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#f0fdf4]">
       <NavBar />
       <main className="p-4 sm:p-8 space-y-10 max-w-screen-xl mx-auto">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-          <h2 className="text-2xl sm:text-3xl font-semibold text-gray-800">
+          <h2 className="text-2xl sm:text-3xl font-semibold text-[#064e3b]">
             Hello, {user.email}!
           </h2>
           <button
             onClick={handleLogout}
-            className="bg-red-500 text-white py-2 px-4 sm:px-6 rounded-md hover:bg-red-600 transition duration-200 text-sm sm:text-base"
+            className="bg-[#059669] text-white py-2 px-4 sm:px-6 rounded-md hover:bg-[#047857] transition duration-200 text-sm sm:text-base"
           >
             Logout
           </button>
@@ -159,21 +159,21 @@ export default function AdminPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="w-full bg-white rounded-lg shadow p-4 sm:p-6">
-            <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-4">
+            <h3 className="text-base sm:text-lg font-semibold text-[#064e3b] mb-4">
               Turtle Rescue Trends
             </h3>
             <Line data={trendChartData} height={250} />
           </div>
 
           <div className="w-full bg-white rounded-lg shadow p-4 sm:p-6">
-            <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-4">
+            <h3 className="text-base sm:text-lg font-semibold text-[#064e3b] mb-4">
               Turtle Length vs Weight
             </h3>
             <Scatter data={scatterChartData} height={250} />
           </div>
 
           <div className="w-full bg-white rounded-lg shadow p-4 sm:p-6">
-            <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-4">
+            <h3 className="text-base sm:text-lg font-semibold text-[#064e3b] mb-4">
               Rescue Count Distribution
             </h3>
             <Pie data={turtleCountPieData} height={250} />
@@ -182,7 +182,7 @@ export default function AdminPage() {
 
         <div className="bg-white shadow-md rounded-lg overflow-x-auto">
           <table className="min-w-full text-sm sm:text-base">
-            <thead className="bg-gray-200 text-gray-700">
+            <thead className="bg-[#d1fae5] text-[#064e3b]">
               <tr>
                 <th className="py-3 px-4 sm:px-6 text-left">Image</th>
                 <th className="py-3 px-4 sm:px-6 text-left">Date Rescued</th>
@@ -193,11 +193,11 @@ export default function AdminPage() {
                 <th className="py-3 px-4 sm:px-6 text-left">Actions</th>
               </tr>
             </thead>
-            <tbody className="text-gray-600">
+            <tbody className="text-[#6b7280]">
               {turtleData.map((turtle) => (
                 <tr
                   key={turtle.id}
-                  className="border-b border-gray-200 hover:bg-gray-50 transition duration-300"
+                  className="border-b border-gray-200 hover:bg-[#f0fdf4] transition duration-300"
                 >
                   <td className="py-3 px-4 sm:px-6">
                     <img
@@ -221,7 +221,7 @@ export default function AdminPage() {
                   <td className="py-3 px-4 sm:px-6 whitespace-nowrap flex gap-2">
                     <button
                       onClick={() => router.push(`/admin/turtle/${turtle.id}`)}
-                      className="text-blue-500 hover:text-blue-700"
+                      className="text-[#059669] hover:text-[#047857]"
                       title="View"
                     >
                       <Eye size={18} />
