@@ -1,6 +1,9 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import Link from "next/link"
+import { db } from "@/firebase/clientApp"
+import { collection, getDocs } from "firebase/firestore"
 import {
   Leaf,
   ShieldCheck,
@@ -12,6 +15,19 @@ import {
 import NavBar from "@/app/components/NavBar"
 
 export default function Home() {
+  const [turtleCount, setTurtleCount] = useState<number>(0)
+
+  // Fetch the number of turtles from Firebase
+  useEffect(() => {
+    const fetchTurtleCount = async () => {
+      const turtlesRef = collection(db, "turtles")
+      const querySnapshot = await getDocs(turtlesRef)
+      setTurtleCount(querySnapshot.size) // Get the number of documents in the collection
+    }
+
+    fetchTurtleCount()
+  }, [])
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-100 text-gray-800">
       <NavBar />
@@ -25,9 +41,20 @@ export default function Home() {
           Helping conservationists rescue, track, and care for sea turtles
           efficiently with real-time data and history logging.
         </p>
+        {/* Large Turtle Count */}
+        <div className="bg-white/80 backdrop-blur-md p-8 rounded-xl mb-6 mx-auto max-w-md shadow-lg">
+          <p className="text-9xl font-extrabold text-green-600 mb-4">
+            {turtleCount}
+          </p>
+          <p className="text-md text-gray-600">
+            Turtles are being tracked right now. Contribute to the cause! Start
+            scanning to help us track even more turtles.
+          </p>
+        </div>
+
         <Link
           href="/scan"
-          className="inline-block px-6 py-3 bg-gradient-to-r from-emerald-500 to-lime-500 text-white rounded-lg hover:opacity-90 transition"
+          className="inline-block px-8 py-4 bg-gradient-to-r from-emerald-500 to-lime-500 text-white text-lg font-semibold rounded-lg shadow-lg hover:opacity-90 transition transform hover:scale-105"
         >
           Start Scanning
         </Link>
@@ -73,7 +100,7 @@ export default function Home() {
             Developed by
           </h2>
           <p className="text-gray-700 font-medium mb-4">
-            Vibe Coder - Alex Maravilla
+            Alex Maravilla - Aspiring SWE
           </p>
 
           <Link

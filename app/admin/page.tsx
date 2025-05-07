@@ -190,6 +190,10 @@ export default function AdminPage() {
                 <th className="py-3 px-4 sm:px-6 text-left">Weight</th>
                 <th className="py-3 px-4 sm:px-6 text-left">Location</th>
                 <th className="py-3 px-4 sm:px-6 text-left">Notes</th>
+                <th className="py-3 px-4 sm:px-6 text-left">
+                  Turtle Type
+                </th>{" "}
+                {/* Added turtleType */}
                 <th className="py-3 px-4 sm:px-6 text-left">Actions</th>
               </tr>
             </thead>
@@ -218,6 +222,9 @@ export default function AdminPage() {
                     {turtle.location || "—"}
                   </td>
                   <td className="py-3 px-4 sm:px-6">{turtle.notes}</td>
+                  <td className="py-3 px-4 sm:px-6">
+                    {turtle.turtleType || "—"} {/* Display turtleType */}
+                  </td>
                   <td className="py-3 px-4 sm:px-6 whitespace-nowrap flex gap-2">
                     <button
                       onClick={() => router.push(`/admin/turtle/${turtle.id}`)}

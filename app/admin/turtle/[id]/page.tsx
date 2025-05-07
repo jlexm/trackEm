@@ -33,69 +33,94 @@ export default function ViewTurtle() {
   return (
     <div className="min-h-screen bg-gray-50">
       <NavBar />
-      <div className="flex flex-col lg:flex-row space-y-8 lg:space-y-0 lg:space-x-8 mt-8 px-4 py-6 max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto mt-8 px-6 py-8 bg-white rounded-lg shadow-lg">
         {/* Turtle Details */}
-        <div className="w-full bg-white rounded-2xl shadow-lg overflow-hidden">
-          <div className="w-full h-64 bg-gray-100 flex items-center justify-center overflow-hidden">
+        <div className="lg:flex lg:space-x-8 space-y-8 lg:space-y-0">
+          {/* Image and Turtle Info */}
+          <div className="lg:w-1/3 flex justify-center bg-gray-100 rounded-lg shadow-md">
             <img
               src={turtle.imageUrl}
               alt="Turtle"
-              className="h-full w-auto object-contain"
+              className="h-full object-contain p-4 rounded-lg"
             />
           </div>
 
-          <div className="p-6 space-y-5">
-            <h1 className="text-3xl font-semibold text-[#064e3b] text-center mb-4">
+          {/* Turtle Information */}
+          <div className="lg:w-2/3">
+            <h1 className="text-4xl font-bold text-[#064e3b] text-center mb-6">
               Turtle Details
             </h1>
 
-            <Detail label="Date Rescued">
-              <Calendar
-                size={16}
-                className="inline-block mr-2 text-[#6b7280]"
-              />
-              {turtle.dateRescued.toDate().toLocaleDateString()}
-            </Detail>
+            {/* Detail Fields */}
+            <div className="space-y-6">
+              <Detail label="Date Rescued">
+                <Calendar
+                  size={24}
+                  className="inline-block mr-4 text-[#6b7280]"
+                />
+                <span className="text-2xl text-[#064e3b]">
+                  {turtle.dateRescued.toDate().toLocaleDateString()}
+                </span>
+              </Detail>
 
-            <Detail label="Length">
-              <Ruler size={16} className="inline-block mr-2 text-[#6b7280]" />
-              {turtle.length} cm
-            </Detail>
+              <Detail label="Length">
+                <Ruler size={24} className="inline-block mr-4 text-[#6b7280]" />
+                <span className="text-2xl text-[#064e3b]">
+                  {turtle.length} cm
+                </span>
+              </Detail>
 
-            <Detail label="Weight">
-              <Weight size={16} className="inline-block mr-2 text-[#6b7280]" />
-              {turtle.weight} kg
-            </Detail>
+              <Detail label="Weight">
+                <Weight
+                  size={24}
+                  className="inline-block mr-4 text-[#6b7280]"
+                />
+                <span className="text-2xl text-[#064e3b]">
+                  {turtle.weight} kg
+                </span>
+              </Detail>
 
-            <Detail label="Notes">
-              <StickyNote
-                size={16}
-                className="inline-block mr-2 text-[#6b7280]"
-              />
-              {turtle.notes || "No notes provided."}
-            </Detail>
+              <Detail label="Notes">
+                <StickyNote
+                  size={24}
+                  className="inline-block mr-4 text-[#6b7280]"
+                />
+                <span className="text-2xl text-[#064e3b]">
+                  {turtle.notes || "No notes provided."}
+                </span>
+              </Detail>
 
-            {/* QR Code */}
-            <div className="text-center pt-4 border-t border-gray-200">
-              <div className="inline-block bg-white p-3 rounded-lg shadow-md hover:shadow-lg transition">
-                <QRCodeSVG value={id as string} size={128} />
+              <Detail label="Turtle Type">
+                <span className="inline-block mr-4 text-[#6b7280] font-medium text-2xl">
+                  🐢
+                </span>
+                <span className="text-2xl text-[#064e3b]">
+                  {turtle.turtleType || "Unknown"}
+                </span>
+              </Detail>
+            </div>
+
+            {/* QR Code Section */}
+            <div className="flex flex-col items-center pt-8 border-t-2 border-gray-200">
+              <div className="inline-block bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition">
+                <QRCodeSVG value={id as string} size={160} />
               </div>
-              <p className="text-lg font-semibold text-[#6b7280] mt-4">
-                ID: {id}
+              <p className="text-xl font-semibold text-[#6b7280] mt-4">
+                Turtle ID: {id}
               </p>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col lg:flex-row justify-center gap-4 mt-6">
+            <div className="flex flex-col lg:flex-row justify-center gap-8 mt-8">
               <button
                 onClick={() => router.push(`/admin/edit/turtle/${id}`)}
-                className="px-6 py-2 bg-[#059669] text-white rounded-lg hover:bg-[#047857] transition"
+                className="px-8 py-4 text-xl bg-[#059669] text-white rounded-lg hover:bg-[#047857] transition"
               >
                 Update Turtle
               </button>
               <button
                 onClick={() => router.push(`/admin/history/turtle/${id}`)}
-                className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition"
+                className="px-8 py-4 text-xl bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition"
               >
                 View History
               </button>
@@ -115,11 +140,9 @@ function Detail({
   children: React.ReactNode
 }) {
   return (
-    <div className="text-sm">
-      <span className="block text-xs text-[#6b7280] font-medium mb-1">
-        {label}
-      </span>
-      <p className="text-[#064e3b] font-medium">{children}</p>
+    <div className="text-xl flex items-center gap-4">
+      <span className="text-lg text-[#6b7280] font-medium">{label}</span>
+      <p className="text-[#064e3b] font-semibold">{children}</p>
     </div>
   )
 }

@@ -24,12 +24,15 @@ export default function AddTurtle() {
     weight: "",
     notes: "",
     location: "",
+    turtleType: "", // New field
   })
 
   const [isLoading, setIsLoading] = useState(false)
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
@@ -63,6 +66,7 @@ export default function AddTurtle() {
         weight: parseFloat(formData.weight),
         notes: formData.notes,
         location: formData.location,
+        turtleType: formData.turtleType,
         createdAt: Timestamp.now(),
       })
 
@@ -76,6 +80,7 @@ export default function AddTurtle() {
         weight: "",
         notes: "",
         location: "",
+        turtleType: "",
       })
     } catch (err) {
       console.error("Error saving turtle:", err)
@@ -166,6 +171,42 @@ export default function AddTurtle() {
               placeholder="Enter location of rescue"
               required
             />
+          </div>
+
+          <div>
+            <label className="flex items-center gap-2 text-gray-700 dark:text-gray-300 mb-2">
+              🐢 Turtle Type
+            </label>
+            <select
+              name="turtleType"
+              value={formData.turtleType}
+              onChange={handleChange}
+              required
+              className="block w-full bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md p-2"
+            >
+              <option value="" disabled>
+                Select a turtle type
+              </option>
+              <optgroup label="Marine Turtles">
+                <option value="Green Turtle">Green Turtle</option>
+                <option value="Hawksbill Turtle">Hawksbill Turtle</option>
+                <option value="Olive Ridley Turtle">Olive Ridley Turtle</option>
+                <option value="Loggerhead Turtle">Loggerhead Turtle</option>
+                <option value="Leatherback Turtle">Leatherback Turtle</option>
+              </optgroup>
+              <optgroup label="Freshwater & Terrestrial Turtles">
+                <option value="Philippine Forest Turtle">
+                  Philippine Forest Turtle
+                </option>
+                <option value="Southeast Asian Box Turtle">
+                  Southeast Asian Box Turtle
+                </option>
+                <option value="Asian Leaf Turtle">Asian Leaf Turtle</option>
+                <option value="Malayan Softshell Turtle">
+                  Malayan Softshell Turtle
+                </option>
+              </optgroup>
+            </select>
           </div>
 
           <div>

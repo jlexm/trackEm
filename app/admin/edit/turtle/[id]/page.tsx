@@ -16,6 +16,7 @@ export default function EditTurtlePage() {
   const [location, setLocation] = useState("")
   const [length, setLength] = useState<number | "">("")
   const [weight, setWeight] = useState<number | "">("")
+  const [turtleType, setTurtleType] = useState("")
   const [image, setImage] = useState<File | null>(null)
 
   useEffect(() => {
@@ -31,6 +32,7 @@ export default function EditTurtlePage() {
         setLocation(data.location || "")
         setLength(data.length || "")
         setWeight(data.weight || "")
+        setTurtleType(data.turtleType || "")
       }
     }
 
@@ -61,18 +63,16 @@ export default function EditTurtlePage() {
     if (!id) return
 
     const updateDate = new Date().toISOString()
-
-    // Get image URL only if image is uploaded
     const imageUrl = image ? await handleImageUpload() : null
-
     const turtleRef = doc(db, "turtles", id as string)
 
     const updateData: any = {
-      notes: notes,
-      location: location,
-      length: length,
-      weight: weight,
-      updateDate: updateDate,
+      notes,
+      location,
+      length,
+      weight,
+      turtleType,
+      updateDate,
       history: arrayUnion({
         date: updateDate,
         changes: {
@@ -80,23 +80,19 @@ export default function EditTurtlePage() {
           location,
           length,
           weight,
+          turtleType,
           image: imageUrl ? "Updated" : "Not Updated",
         },
       }),
     }
 
-    // Only include the image if imageUrl is not null
     if (imageUrl) {
       updateData.image = imageUrl
-    } else {
-      // Preserve the existing image if no new image is uploaded
-      if (turtle?.image) {
-        updateData.image = turtle.image
-      }
+    } else if (turtle?.image) {
+      updateData.image = turtle.image
     }
 
     try {
-      // Update the document with the constructed update data
       await updateDoc(turtleRef, updateData)
       alert("Turtle updated!")
       router.push("/admin")
@@ -174,6 +170,53 @@ export default function EditTurtlePage() {
               }
               className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#059669]"
             />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-[#064e3b]">
+              Turtle Type
+            </label>
+            <select
+              value={turtleType}
+              onChange={(e) => setTurtleType(e.target.value)}
+              required
+              className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#059669]"
+            >
+              <option value="" disabled>
+                Select a turtle type
+              </option>
+              <optgroup label="Marine Turtles">
+                <option value="Green Turtle">
+                  Green Turtle (Chelonia mydas)
+                </option>
+                <option value="Hawksbill Turtle">
+                  Hawksbill Turtle (Eretmochelys imbricata)
+                </option>
+                <option value="Olive Ridley Turtle">
+                  Olive Ridley Turtle (Lepidochelys olivacea)
+                </option>
+                <option value="Loggerhead Turtle">
+                  Loggerhead Turtle (Caretta caretta)
+                </option>
+                <option value="Leatherback Turtle">
+                  Leatherback Turtle (Dermochelys coriacea)
+                </option>
+              </optgroup>
+              <optgroup label="Freshwater & Terrestrial Turtles">
+                <option value="Philippine Forest Turtle">
+                  Philippine Forest Turtle (Siebenrockiella leytensis)
+                </option>
+                <option value="Southeast Asian Box Turtle">
+                  Southeast Asian Box Turtle (Cuora amboinensis)
+                </option>
+                <option value="Asian Leaf Turtle">
+                  Asian Leaf Turtle (Cyclemys dentata)
+                </option>
+                <option value="Malayan Softshell Turtle">
+                  Malayan Softshell Turtle (Dogania subplana)
+                </option>
+              </optgroup>
+            </select>
           </div>
 
           <div>

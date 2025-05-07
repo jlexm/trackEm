@@ -8,26 +8,28 @@ import { useParams } from "next/navigation"
 import { Ruler, Weight, StickyNote, Calendar, Image, Info } from "lucide-react"
 
 export default function TurtleHistoryPage() {
-  const { id } = useParams()
+  const { id } = useParams<{ id: string }>()
   const [history, setHistory] = useState<any[]>([])
 
   useEffect(() => {
-    const fetchHistory = async () => {
+    ;(async () => {
       if (!id) return
-      const turtleRef = doc(db, "turtles", id as string)
-      const turtleSnap = await getDoc(turtleRef)
+      try {
+        const turtleRef = doc(db, "turtles", id)
+        const turtleSnap = await getDoc(turtleRef)
 
-      if (turtleSnap.exists()) {
-        const data = turtleSnap.data()
-        const sortedHistory = (data.history || []).sort(
-          (a: any, b: any) =>
-            new Date(b.date).getTime() - new Date(a.date).getTime()
-        )
-        setHistory(sortedHistory)
+        if (turtleSnap.exists()) {
+          const data = turtleSnap.data()
+          const sortedHistory = (data.history || []).sort(
+            (a: any, b: any) =>
+              new Date(b.date).getTime() - new Date(a.date).getTime()
+          )
+          setHistory(sortedHistory)
+        }
+      } catch (error) {
+        console.error("Failed to fetch history:", error)
       }
-    }
-
-    fetchHistory()
+    })()
   }, [id])
 
   return (
@@ -57,19 +59,17 @@ export default function TurtleHistoryPage() {
                   {new Date(entry.date).toLocaleString()}
                 </p>
                 <ul className="space-y-2 text-sm text-gray-700">
-                  {Object.keys(entry.changes).map((key) => {
+                  {Object.entries(entry.changes).map(([key, value]) => {
                     const Icon = getIconForField(key)
-                    const value =
-                      entry.changes[key] === "Not Updated"
-                        ? "No Change"
-                        : entry.changes[key]
+                    const displayValue =
+                      value === "Unchanged" ? "No Change" : value
                     return (
                       <li key={key} className="flex items-center gap-2">
                         <Icon size={16} className="text-[#6b7280]" />
                         <span className="font-medium capitalize text-[#064e3b]">
                           {key}:
                         </span>
-                        <span>{value}</span>
+                        <span>{String(displayValue)}</span>
                       </li>
                     )
                   })}
