@@ -103,7 +103,10 @@ export default function ViewTurtle() {
             {/* QR Code Section */}
             <div className="flex flex-col items-center pt-8 border-t-2 border-gray-200">
               <div className="inline-block bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition">
-                <QRCodeSVG value={id as string} size={160} />
+                <QRCodeSVG
+                  value={`https://track-em.vercel.app/admin/turtle/${id}`}
+                  size={160}
+                />
               </div>
               <p className="text-xl font-semibold text-[#6b7280] mt-4">
                 Turtle ID: {id}
